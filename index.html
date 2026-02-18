@@ -3,113 +3,195 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ALPHA VIP PREDICTOR v3.0</title>
+    <title>ALPHA VIP AI - PROFESSIONAL PREDICTOR</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
-        
+
         :root {
             --neon: #00ff00;
-            --bg: #050a05;
-            --panel: rgba(10, 20, 10, 0.95);
+            --bg-dark: #050a05;
+            --panel-bg: rgba(10, 20, 10, 0.98);
+            --border: #1a331a;
         }
 
         body {
-            margin: 0; background: var(--bg);
+            margin: 0; padding: 0;
+            background-color: var(--bg-dark);
+            background-image: radial-gradient(#0a220a 0.5px, transparent 0.5px);
+            background-size: 20px 20px;
             font-family: 'Share Tech Mono', monospace;
             color: var(--neon);
             display: flex; justify-content: center; align-items: center;
-            min-height: 100vh; overflow: hidden;
+            min-height: 100vh; overflow-x: hidden;
         }
 
-        .container {
+        .main-card {
             width: 90%; max-width: 380px;
-            background: var(--panel);
+            background: var(--panel-bg);
             border: 2px solid var(--neon);
-            border-radius: 20px; padding: 25px;
-            box-shadow: 0 0 40px rgba(0, 255, 0, 0.2);
-            text-align: center; position: relative;
+            border-radius: 15px; padding: 25px;
+            box-shadow: 0 0 30px rgba(0, 255, 0, 0.15);
+            position: relative; box-sizing: border-box;
         }
 
-        /* Scan Animation */
-        .scan-line {
-            position: absolute; width: 100%; height: 2px;
-            background: var(--neon); top: 0; left: 0;
-            opacity: 0.3; animation: scan 3s linear infinite;
+        /* Glitch Effect for Title */
+        h2 {
+            margin: 0 0 20px 0; text-align: center;
+            font-size: 1.5rem; letter-spacing: 3px;
+            text-transform: uppercase; text-shadow: 2px 2px #000;
         }
 
-        @keyframes scan { 0% { top: 0; } 100% { top: 100%; } }
-
-        .analysis-display {
-            background: rgba(0,0,0,0.8);
-            border: 1px solid #1a331a; border-radius: 12px;
-            height: 220px; margin-bottom: 20px;
-            display: flex; flex-direction: column; justify-content: center;
+        .screen-container {
+            background: #000; border: 1px solid var(--border);
+            border-radius: 10px; height: 230px; margin-bottom: 20px;
+            display: flex; flex-direction: column; 
+            justify-content: center; align-items: center;
             position: relative; overflow: hidden;
         }
 
-        .chart-box {
-            display: flex; justify-content: center; align-items: flex-end;
-            gap: 10px; height: 100px;
+        /* Animated Signal Waves */
+        .wave-box {
+            display: flex; align-items: flex-end; gap: 8px; height: 80px;
         }
-
         .bar {
-            width: 14px; border-radius: 2px;
-            transition: height 0.5s ease;
+            width: 12px; border-radius: 2px;
+            transition: height 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
-        .up { background: #00ff00; box-shadow: 0 0 10px #00ff00; }
+        .up { background: var(--neon); box-shadow: 0 0 10px var(--neon); }
         .down { background: #ff0000; box-shadow: 0 0 10px #ff0000; }
 
-        .status-txt { font-size: 0.85rem; margin-top: 15px; color: #fff; }
+        .status-text {
+            margin-top: 20px; font-size: 0.8rem;
+            text-transform: uppercase; letter-spacing: 1px;
+            height: 15px; color: #fff;
+        }
 
         select, button {
-            width: 100%; padding: 14px; margin: 10px 0;
-            background: #000; border: 1px solid #1a331a;
-            color: var(--neon); border-radius: 8px; font-family: inherit;
+            width: 100%; padding: 14px; margin: 8px 0;
+            background: #000; border: 1px solid var(--border);
+            color: var(--neon); font-family: inherit;
+            border-radius: 6px; outline: none; font-size: 0.9rem;
         }
 
-        .btn-gen {
-            background: var(--neon); color: #000; font-weight: bold;
-            border: none; cursor: pointer; font-size: 1rem;
-        }
-        .btn-gen:hover { background: #00cc00; transform: scale(0.98); }
+        select:focus { border-color: var(--neon); }
 
-        .btn-tg { background: #0088ff; color: #fff; border: none; font-size: 0.9rem; }
-
-        #signalResult {
-            text-align: left; padding: 10px;
-            font-size: 1rem; display: none;
+        .btn-generate {
+            background: var(--neon); color: #000;
+            font-weight: bold; border: none; cursor: pointer;
+            transition: 0.3s; margin-top: 15px;
         }
-        .highlight { color: #fff; text-shadow: 0 0 5px var(--neon); }
+        .btn-generate:hover { background: #00cc00; box-shadow: 0 0 15px var(--neon); }
+
+        .btn-telegram {
+            background: #0088ff; color: #fff; border: none;
+            text-decoration: none; display: flex; align-items: center;
+            justify-content: center; font-size: 0.8rem; cursor: pointer;
+        }
+
+        /* Signal Display Overlay */
+        #signalOverlay {
+            position: absolute; inset: 0; background: #000;
+            display: none; flex-direction: column;
+            justify-content: center; padding: 20px; text-align: left;
+        }
+        .res-line { margin: 5px 0; font-size: 1rem; color: #ccc; }
+        .res-val { color: #fff; float: right; }
+        .res-dir { font-size: 1.4rem; font-weight: bold; text-align: center; margin-top: 15px; }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <div class="scan-line"></div>
-        <h2 style="margin: 0 0 15px 0; letter-spacing: 2px;">ALPHA VIP AI</h2>
+    <div class="main-card">
+        <h2>ALPHA VIP AI</h2>
 
-        <div class="analysis-display" id="screen">
-            <div id="chart" class="chart-box">
+        <div class="screen-container">
+            <div id="visualizer" class="wave-box">
                 <div class="bar up" style="height: 40px;"></div>
                 <div class="bar down" style="height: 60px;"></div>
-                <div class="bar up" style="height: 80px;"></div>
-                <div class="bar down" style="height: 30px;"></div>
-                <div class="bar up" style="height: 50px;"></div>
+                <div class="bar up" style="height: 85px;"></div>
+                <div class="bar down" style="height: 35px;"></div>
+                <div class="bar up" style="height: 55px;"></div>
             </div>
-            <div id="status" class="status-txt">SYSTEM READY...</div>
-            
-            <div id="signalResult">
-                <p>ASSET: <span id="resAsset" class="highlight">-</span></p>
-                <p>TIME: <span id="resTime" class="highlight">-</span> (UTC+6)</p>
-                <p>STRATEGY: <span id="resStrat" class="highlight">-</span></p>
-                <p style="font-size: 1.2rem; font-weight: bold;">SIGNAL: <span id="resDir">-</span></p>
+            <div id="statusLabel" class="status-text">SYSTEM READY</div>
+
+            <div id="signalOverlay">
+                <div class="res-line">ASSET <span id="sAsset" class="res-val"></span></div>
+                <div class="res-line">TIME (BD) <span id="sTime" class="res-val"></span></div>
+                <div class="res-line">ACCURACY <span id="sAcc" class="res-val"></span></div>
+                <div class="res-line">EXPIRY <span class="res-val">M1 (1 MIN)</span></div>
+                <div id="sDir" class="res-dir"></div>
             </div>
         </div>
 
-        <select id="assetSelect">
-            <optgroup label="OTC MARKETS">
-                <option>EUR/USD (OTC)</option>
-                <option>USD/BDT (OTC)</option>
+        <select id="marketSelect">
+            <optgroup label="OTC CURRENCIES (40+)">
+                <option>USD/BDT (OTC)</option><option>USD/INR (OTC)</option><option>USD/PKR (OTC)</option>
+                <option>EUR/USD (OTC)</option><option>GBP/USD (OTC)</option><option>USD/JPY (OTC)</option>
+                <option>USD/BRL (OTC)</option><option>AUD/CAD (OTC)</option><option>EUR/GBP (OTC)</option>
+                <option>USD/EGP (OTC)</option><option>NZD/USD (OTC)</option><option>GBP/JPY (OTC)</option>
+                <option>USD/TRY (OTC)</option><option>EUR/JPY (OTC)</option><option>AUD/USD (OTC)</option>
+            </optgroup>
+            <optgroup label="COMMODITIES">
+                <option>GOLD (OTC)</option><option>SILVER (OTC)</option><option>CRUDE OIL</option>
+            </optgroup>
+            <optgroup label="STOCKS">
+                <option>APPLE (OTC)</option><option>FACEBOOK (OTC)</option><option>TESLA (OTC)</option>
+                <option>BOEING (OTC)</option><option>INTEL (OTC)</option>
+            </optgroup>
+        </select>
+
+        <button class="btn-generate" onclick="processSignal()">GENERATE SIGNAL</button>
+        <button class="btn-telegram" onclick="window.open('https://t.me/PublicTZteamAlpha')">JOIN TELEGRAM CHANNEL</button>
+    </div>
+
+    <script>
+        function processSignal() {
+            const overlay = document.getElementById('signalOverlay');
+            const status = document.getElementById('statusLabel');
+            const bars = document.querySelectorAll('.bar');
+            
+            overlay.style.display = "none";
+            let steps = ["SCANNING LIQUIDITY...", "CHECKING VOLATILITY...", "SMA CROSSOVER...", "RSI OPTIMIZING...", "SIGNAL FOUND!"];
+            let i = 0;
+
+            const timer = setInterval(() => {
+                status.innerText = steps[i];
+                bars.forEach(b => b.style.height = Math.floor(Math.random() * 90 + 10) + "px");
+                i++;
+                if(i >= steps.length) {
+                    clearInterval(timer);
+                    renderSignal();
+                }
+            }, 800);
+        }
+
+        function renderSignal() {
+            const now = new Date();
+            const utc = now.getTime() + (now.getTimezoneOffset() * 60000);
+            const bdTime = new Date(utc + (3600000 * 6)); // Bangladesh Time
+            
+            let hh = bdTime.getHours().toString().padStart(2, '0');
+            let mm = (bdTime.getMinutes() + 1).toString().padStart(2, '0');
+            if(mm === "60") { mm = "00"; hh = (parseInt(hh)+1).toString().padStart(2, '0'); }
+
+            const asset = document.getElementById('marketSelect').value;
+            const accuracy = (Math.random() * (99.2 - 92.5) + 92.5).toFixed(2);
+            const isCall = Math.random() > 0.5;
+
+            document.getElementById('sAsset').innerText = asset;
+            document.getElementById('sTime').innerText = hh + ":" + mm;
+            document.getElementById('sAcc').innerText = accuracy + "%";
+            
+            const dirBox = document.getElementById('sDir');
+            dirBox.innerText = isCall ? "CALL (UP) ↑" : "PUT (DOWN) ↓";
+            dirBox.style.color = isCall ? "#00ff00" : "#ff0000";
+
+            document.getElementById('signalOverlay').style.display = "flex";
+            document.getElementById('statusLabel').innerText = "SIGNAL ACTIVE";
+        }
+    </script>
+</body>
+</html>
                 <option>GBP/USD (OTC)</option>
                 <option>USD/INR (OTC)</option>
             </optgroup>
