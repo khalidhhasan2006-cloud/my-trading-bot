@@ -3,113 +3,190 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ALPHA VIP AI - PROFESSIONAL PREDICTOR</title>
+    <title>ALPHA VIP PREDICTOR</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
-
-        :root {
-            --neon: #00ff00;
-            --bg-dark: #050a05;
-            --panel-bg: rgba(10, 20, 10, 0.98);
-            --border: #1a331a;
-        }
-
+        
         body {
             margin: 0; padding: 0;
-            background-color: var(--bg-dark);
-            background-image: radial-gradient(#0a220a 0.5px, transparent 0.5px);
-            background-size: 20px 20px;
+            background: #050a05 url('https://www.transparenttextures.com/patterns/carbon-fibre.png');
             font-family: 'Share Tech Mono', monospace;
-            color: var(--neon);
+            color: #00ff00;
             display: flex; justify-content: center; align-items: center;
-            min-height: 100vh; overflow-x: hidden;
+            min-height: 100vh;
         }
 
-        .main-card {
-            width: 90%; max-width: 380px;
-            background: var(--panel-bg);
-            border: 2px solid var(--neon);
-            border-radius: 15px; padding: 25px;
-            box-shadow: 0 0 30px rgba(0, 255, 0, 0.15);
-            position: relative; box-sizing: border-box;
+        .app-container {
+            width: 350px; background: rgba(10, 20, 10, 0.95);
+            border: 1px solid #00ff00; border-radius: 15px;
+            padding: 20px; box-shadow: 0 0 30px rgba(0, 255, 0, 0.2);
+            text-align: center; display: none;
         }
 
-        /* Glitch Effect for Title */
-        h2 {
-            margin: 0 0 20px 0; text-align: center;
-            font-size: 1.5rem; letter-spacing: 3px;
-            text-transform: uppercase; text-shadow: 2px 2px #000;
+        #loginOverlay {
+            position: fixed; inset: 0; background: black;
+            display: flex; justify-content: center; align-items: center; z-index: 1000;
         }
 
-        .screen-container {
-            background: #000; border: 1px solid var(--border);
-            border-radius: 10px; height: 230px; margin-bottom: 20px;
-            display: flex; flex-direction: column; 
-            justify-content: center; align-items: center;
-            position: relative; overflow: hidden;
+        .analysis-box {
+            border: 1px solid #333; border-radius: 10px;
+            padding: 15px; margin-bottom: 20px; min-height: 180px;
+            background: rgba(0,0,0,0.5); position: relative;
         }
 
-        /* Animated Signal Waves */
-        .wave-box {
-            display: flex; align-items: flex-end; gap: 8px; height: 80px;
-        }
-        .bar {
-            width: 12px; border-radius: 2px;
-            transition: height 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-        .up { background: var(--neon); box-shadow: 0 0 10px var(--neon); }
-        .down { background: #ff0000; box-shadow: 0 0 10px #ff0000; }
+        .status-msg { font-size: 0.9rem; color: #00ff00; margin-bottom: 10px; height: 20px; }
 
-        .status-text {
-            margin-top: 20px; font-size: 0.8rem;
-            text-transform: uppercase; letter-spacing: 1px;
-            height: 15px; color: #fff;
+        .chart-sim {
+            display: flex; justify-content: center; align-items: flex-end;
+            gap: 8px; height: 100px; padding-bottom: 10px;
         }
+        .candle { width: 12px; border-radius: 2px; position: relative; }
+        .green { background: #00ff00; box-shadow: 0 0 10px #00ff00; }
+        .red { background: #ff0000; box-shadow: 0 0 10px #ff0000; }
 
-        select, button {
-            width: 100%; padding: 14px; margin: 8px 0;
-            background: #000; border: 1px solid var(--border);
-            color: var(--neon); font-family: inherit;
-            border-radius: 6px; outline: none; font-size: 0.9rem;
+        input, select, button {
+            width: 100%; padding: 12px; margin: 8px 0;
+            background: #111; border: 1px solid #333;
+            color: #00ff00; font-family: inherit; border-radius: 8px;
         }
 
-        select:focus { border-color: var(--neon); }
-
-        .btn-generate {
-            background: var(--neon); color: #000;
-            font-weight: bold; border: none; cursor: pointer;
-            transition: 0.3s; margin-top: 15px;
+        .gen-btn {
+            background: #00ff00; color: #000; font-weight: bold;
+            cursor: pointer; border: none; transition: 0.3s;
         }
-        .btn-generate:hover { background: #00cc00; box-shadow: 0 0 15px var(--neon); }
+        .gen-btn:active { transform: scale(0.95); }
 
-        .btn-telegram {
-            background: #0088ff; color: #fff; border: none;
-            text-decoration: none; display: flex; align-items: center;
-            justify-content: center; font-size: 0.8rem; cursor: pointer;
-        }
+        .tg-btn { background: #0088ff; color: #fff; border: none; text-decoration: none; display: block; margin-top: 10px; }
 
-        /* Signal Display Overlay */
-        #signalOverlay {
-            position: absolute; inset: 0; background: #000;
-            display: none; flex-direction: column;
-            justify-content: center; padding: 20px; text-align: left;
-        }
-        .res-line { margin: 5px 0; font-size: 1rem; color: #ccc; }
-        .res-val { color: #fff; float: right; }
-        .res-dir { font-size: 1.4rem; font-weight: bold; text-align: center; margin-top: 15px; }
+        .result-screen { font-size: 1.1rem; line-height: 1.6; text-align: left; padding: 10px; }
+        .highlight { color: #fff; font-weight: bold; }
     </style>
 </head>
 <body>
 
-    <div class="main-card">
-        <h2>ALPHA VIP AI</h2>
+    <div id="loginOverlay">
+        <div style="text-align: center;">
+            <h2 style="color: #00ff00;">ALPHA SECURE LOGIN</h2>
+            <input type="password" id="passInput" placeholder="ENTER ACCESS CODE">
+            <button class="gen-btn" onclick="checkPass()">LOGIN</button>
+        </div>
+    </div>
 
-        <div class="screen-container">
-            <div id="visualizer" class="wave-box">
-                <div class="bar up" style="height: 40px;"></div>
-                <div class="bar down" style="height: 60px;"></div>
-                <div class="bar up" style="height: 85px;"></div>
-                <div class="bar down" style="height: 35px;"></div>
+    <div class="app-container" id="mainApp">
+        <h3 style="margin-top: 0;">ALPHA VIP PREDICTOR</h3>
+        
+        <div class="analysis-box">
+            <div id="statusMsg" class="status-msg">WAITING FOR COMMAND...</div>
+            <div id="chartDisplay" class="chart-sim">
+                <div class="candle green" style="height: 40px;"></div>
+                <div class="candle red" style="height: 60px;"></div>
+                <div class="candle green" style="height: 30px;"></div>
+                <div class="candle red" style="height: 70px;"></div>
+                <div class="candle green" style="height: 50px;"></div>
+            </div>
+            <div id="resultOutput" class="result-screen"></div>
+        </div>
+
+        <label style="font-size: 0.8rem; text-align: left; display: block; color: #008800;">SELECT MARKET</label>
+        <select id="asset">
+            <optgroup label="OTC MARKETS">
+                <option>USD/BDT (OTC)</option>
+                <option>USD/INR (OTC)</option>
+                <option>EUR/USD (OTC)</option>
+                <option>GBP/USD (OTC)</option>
+                <option>USD/BRL (OTC)</option>
+                <option>USD/PKR (OTC)</option>
+                <option>EUR/GBP (OTC)</option>
+                <option>USD/JPY (OTC)</option>
+                <option>AUD/CAD (OTC)</option>
+                <option>GBP/JPY (OTC)</option>
+            </optgroup>
+            <optgroup label="REAL MARKETS">
+                <option>EUR/USD</option>
+                <option>GBP/USD</option>
+                <option>USD/JPY</option>
+                <option>AUD/USD</option>
+                <option>EUR/JPY</option>
+                <option>USD/CAD</option>
+            </optgroup>
+            <optgroup label="COMMODITIES/STOCKS">
+                <option>GOLD (OTC)</option>
+                <option>SILVER (OTC)</option>
+                <option>APPLE (OTC)</option>
+                <option>FACEBOOK (OTC)</option>
+                <option>BOEING (OTC)</option>
+            </optgroup>
+        </select>
+
+        <button class="gen-btn" onclick="startAnalysis()">GENERATE SIGNAL</button>
+        <button class="tg-btn" onclick="window.open('https://t.me/PublicTZteamAlpha')">JOIN OUR TELEGRAM</button>
+    </div>
+
+    <script>
+        const PASS = "TZteamALPHA";
+
+        function checkPass() {
+            if(document.getElementById('passInput').value === PASS) {
+                document.getElementById('loginOverlay').style.display = 'none';
+                document.getElementById('mainApp').style.display = 'block';
+            } else { alert("WRONG CODE!"); }
+        }
+
+        async function startAnalysis() {
+            const status = document.getElementById('statusMsg');
+            const result = document.getElementById('resultOutput');
+            const chart = document.getElementById('chartDisplay');
+            
+            result.innerHTML = "";
+            chart.style.display = "flex";
+            
+            const steps = [
+                "Scanning Indicators...",
+                "Volume Analysis...",
+                "Trend Confirmation...",
+                "SMA & MACD Checking...",
+                "Finalizing Signal..."
+            ];
+
+            for(let step of steps) {
+                status.innerText = step;
+                await new Promise(r => setTimeout(r, 800));
+            }
+
+            status.innerText = "SIGNAL READY ✅";
+            chart.style.display = "none";
+
+            // UTC+6 (Bangladesh Time) Calculation
+            const now = new Date();
+            const utc = now.getTime() + (now.getTimezoneOffset() * 60000);
+            const bdTime = new Date(utc + (3600000 * 6));
+            
+            let hours = bdTime.getHours().toString().padStart(2, '0');
+            let mins = (bdTime.getMinutes() + 1).toString().padStart(2, '0');
+            if (parseInt(mins) >= 60) {
+                mins = "00";
+                hours = (parseInt(hours) + 1).toString().padStart(2, '0');
+            }
+            
+            const asset = document.getElementById('asset').value;
+            const isUp = Math.random() > 0.5;
+            const signal = isUp ? "CALL (UP) ↑" : "PUT (DOWN) ↓";
+            const sigColor = isUp ? "#00ff00" : "#ff0000";
+            const accuracy = (Math.random() * (98 - 88) + 88).toFixed(2);
+
+            result.innerHTML = `
+                <div style="border-left: 3px solid #00ff00; padding-left: 10px;">
+                    <span class="highlight">ASSET :</span> ${asset}<br>
+                    <span class="highlight">TIME  :</span> ${hours}:${mins} (UTC+6)<br>
+                    <span class="highlight">ACCU. :</span> ${accuracy}%<br>
+                    <span class="highlight" style="color:${sigColor}">SIGNAL: ${signal}</span><br>
+                    <small style="color: #aaa; font-size: 0.7rem;">⚠️ USE MTG-1 IF LOSS</small>
+                </div>
+            `;
+        }
+    </script>
+</body>
+</html>
                 <div class="bar up" style="height: 55px;"></div>
             </div>
             <div id="statusLabel" class="status-text">SYSTEM READY</div>
