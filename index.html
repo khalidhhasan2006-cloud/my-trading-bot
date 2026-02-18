@@ -1,116 +1,147 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="bn">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ALPHA VIP PREDICTOR</title>
+    <title>For My Najifa</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
-        
+        :root {
+            --primary-pink: #ff4d6d;
+            --soft-pink: #fff0f3;
+            --deep-red: #c9184a;
+        }
+
         body {
-            margin: 0; padding: 0;
-            background: #050a05 url('https://www.transparenttextures.com/patterns/carbon-fibre.png');
-            font-family: 'Share Tech Mono', monospace;
-            color: #00ff00;
-            display: flex; justify-content: center; align-items: center;
-            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--soft-pink);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+            text-align: center;
         }
 
-        .app-container {
-            width: 350px; background: rgba(10, 20, 10, 0.95);
-            border: 1px solid #00ff00; border-radius: 15px;
-            padding: 20px; box-shadow: 0 0 30px rgba(0, 255, 0, 0.2);
-            text-align: center; display: none;
+        .container {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 25px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            max-width: 450px;
+            width: 90%;
+            transition: all 0.5s ease;
         }
 
-        #loginOverlay {
-            position: fixed; inset: 0; background: black;
-            display: flex; justify-content: center; align-items: center; z-index: 1000;
+        h1 { color: var(--deep-red); margin-bottom: 1.5rem; font-size: 1.8rem; }
+        p { color: #555; line-height: 1.6; }
+
+        .btn-group {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
         }
 
-        .analysis-box {
-            border: 1px solid #333; border-radius: 10px;
-            padding: 15px; margin-bottom: 20px; min-height: 180px;
-            background: rgba(0,0,0,0.5); position: relative;
+        button {
+            padding: 15px;
+            border: none;
+            border-radius: 50px;
+            background-color: var(--primary-pink);
+            color: white;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s, background-color 0.2s;
         }
 
-        .status-msg { font-size: 0.9rem; color: #00ff00; margin-bottom: 10px; height: 20px; }
-
-        .chart-sim {
-            display: flex; justify-content: center; align-items: flex-end;
-            gap: 8px; height: 100px; padding-bottom: 10px;
-        }
-        .candle { width: 12px; border-radius: 2px; position: relative; }
-        .green { background: #00ff00; box-shadow: 0 0 10px #00ff00; }
-        .red { background: #ff0000; box-shadow: 0 0 10px #ff0000; }
-
-        input, select, button {
-            width: 100%; padding: 12px; margin: 8px 0;
-            background: #111; border: 1px solid #333;
-            color: #00ff00; font-family: inherit; border-radius: 8px;
+        button:hover {
+            background-color: var(--deep-red);
+            transform: scale(1.05);
         }
 
-        .gen-btn {
-            background: #00ff00; color: #000; font-weight: bold;
-            cursor: pointer; border: none; transition: 0.3s;
+        .hidden { display: none; }
+
+        .celebration-bg {
+            background-color: #ffb3c1 !important;
         }
-        .gen-btn:active { transform: scale(0.95); }
 
-        .tg-btn { background: #0088ff; color: #fff; border: none; text-decoration: none; display: block; margin-top: 10px; }
+        .letter-content {
+            text-align: left;
+            white-space: pre-line;
+            font-style: italic;
+            color: #333;
+            margin-top: 20px;
+            font-size: 1.1rem;
+        }
 
-        .result-screen { font-size: 1.1rem; line-height: 1.6; text-align: left; padding: 10px; }
-        .highlight { color: #fff; font-weight: bold; }
+        .heart { color: var(--deep-red); font-size: 2.5rem; margin-bottom: 10px; }
     </style>
 </head>
 <body>
 
-    <div id="loginOverlay">
-        <div style="text-align: center;">
-            <h2 style="color: #00ff00;">ALPHA SECURE LOGIN</h2>
-            <input type="password" id="passInput" placeholder="ENTER ACCESS CODE">
-            <button class="gen-btn" onclick="checkPass()">LOGIN</button>
+    <div id="screen-question" class="container">
+        <div class="heart">❤️</div>
+        <h1>নাজিফা, তুমি কি আমাকে ভালোবাসো?</h1>
+        <div class="btn-group">
+            <button onclick="showLove()">হ্যাঁ ❤️</button>
+            <button onclick="showLove()">হ্যাঁ ❤️</button>
+            <button onclick="showLetter()">অবশ্যই হ্যাঁ! ❤️</button>
         </div>
     </div>
 
-    <div class="app-container" id="mainApp">
-        <h3 style="margin-top: 0;">ALPHA VIP PREDICTOR</h3>
-        
-        <div class="analysis-box">
-            <div id="statusMsg" class="status-msg">WAITING FOR COMMAND...</div>
-            <div id="chartDisplay" class="chart-sim">
-                <div class="candle green" style="height: 40px;"></div>
-                <div class="candle red" style="height: 60px;"></div>
-                <div class="candle green" style="height: 30px;"></div>
-                <div class="candle red" style="height: 70px;"></div>
-                <div class="candle green" style="height: 50px;"></div>
-            </div>
-            <div id="resultOutput" class="result-screen"></div>
-        </div>
+    <div id="screen-love" class="container hidden">
+        <div class="heart">💖✨</div>
+        <h1 style="font-size: 2rem;">অনেক ভালোবাসি তোমাকে জান! ❤️‍🩹</h1>
+        <button onclick="goBack()" style="margin-top: 20px; font-size: 0.8rem; background: #aaa;">পিছনে যাও</button>
+    </div>
 
-        <label style="font-size: 0.8rem; text-align: left; display: block; color: #008800;">SELECT MARKET</label>
-        <select id="asset">
-            <optgroup label="OTC MARKETS">
-                <option>USD/BDT (OTC)</option>
-                <option>USD/INR (OTC)</option>
-                <option>EUR/USD (OTC)</option>
-                <option>GBP/USD (OTC)</option>
-                <option>USD/BRL (OTC)</option>
-                <option>USD/PKR (OTC)</option>
-                <option>EUR/GBP (OTC)</option>
-                <option>USD/JPY (OTC)</option>
-                <option>AUD/CAD (OTC)</option>
-                <option>GBP/JPY (OTC)</option>
-            </optgroup>
-            <optgroup label="REAL MARKETS">
-                <option>EUR/USD</option>
-                <option>GBP/USD</option>
-                <option>USD/JPY</option>
-                <option>AUD/USD</option>
-                <option>EUR/JPY</option>
-                <option>USD/CAD</option>
-            </optgroup>
-            <optgroup label="COMMODITIES/STOCKS">
-                <option>GOLD (OTC)</option>
+    <div id="screen-letter" class="container hidden">
+        <h1 style="border-bottom: 2px solid var(--primary-pink); padding-bottom: 10px;">প্রিয় নাজিফা...</h1>
+        <div class="letter-content">
+            আজ তোমাকে কিছু কথা বলতে চাই যা হয়তো মুখে সবসময় বলা হয় না। নাজিফা, তুমি আমার জীবনের সেই মানুষ, যাকে পাওয়ার পর আমার পৃথিবীটা বদলে গেছে। তোমার হাসি, তোমার কথা আর তোমার ভালোবাসা আমার প্রতিদিনের বেঁচে থাকার শক্তি।
+
+            আমি তোমাকে কতটা ভালোবাসি তা হয়তো এই সামান্য কয়েকটা লাইনে বোঝানো সম্ভব না। শুধু এটুকু জেনে রেখো, আমার প্রতিটি ভাবনায় আর প্রতিটি প্রার্থনায় তুমি আছো। তুমি শুধু আমার ভালোবাসাই নও, তুমি আমার সবটুকু সুখ।
+
+            আমার পাশে থাকার জন্য আর আমাকে এতোটা ভালোবাসার জন্য তোমাকে অনেক ধন্যবাদ। আমি কথা দিচ্ছি, সারাজীবন তোমার হাতটা এভাবেই শক্ত করে ধরে রাখব।
+
+            তোমাকে অনেক অনেক ভালোবাসি, নাজিফা! ❤️
+
+            ইতি,
+            তোমার <b>খালিদ</b>
+        </div>
+        <button onclick="goBack()" style="margin-top: 25px; font-size: 0.9rem; background: #555;">পিছনে ফিরুন</button>
+    </div>
+
+    <script>
+        const qScreen = document.getElementById('screen-question');
+        const lScreen = document.getElementById('screen-love');
+        const letterScreen = document.getElementById('screen-letter');
+
+        function showLove() {
+            qScreen.classList.add('hidden');
+            letterScreen.classList.add('hidden');
+            lScreen.classList.remove('hidden');
+            document.body.classList.add('celebration-bg');
+        }
+
+        function showLetter() {
+            qScreen.classList.add('hidden');
+            lScreen.classList.add('hidden');
+            letterScreen.classList.remove('hidden');
+            document.body.style.backgroundColor = "#fff";
+        }
+
+        function goBack() {
+            lScreen.classList.add('hidden');
+            letterScreen.classList.add('hidden');
+            qScreen.classList.remove('hidden');
+            document.body.classList.remove('celebration-bg');
+            document.body.style.backgroundColor = "#fff0f3";
+        }
+    </script>
+</body>
+</html>                <option>GOLD (OTC)</option>
                 <option>SILVER (OTC)</option>
                 <option>APPLE (OTC)</option>
                 <option>FACEBOOK (OTC)</option>
