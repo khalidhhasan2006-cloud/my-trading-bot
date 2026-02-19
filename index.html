@@ -1,115 +1,262 @@
 <!DOCTYPE html>
-<html lang="bn">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>For My Najifa</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>TZteamALPHA | Signal v5.0</title>
     <style>
         :root {
-            --primary-pink: #ff4d6d;
-            --soft-pink: #fff0f3;
-            --deep-red: #c9184a;
+            --primary: #00ff88;
+            --bg: #0b0e11;
+            --card: #1a1e26;
+            --text: #ffffff;
+            --danger: #ff4a4a;
+            --warning: #ffcc00;
+            --tg: #0088cc;
         }
 
-        body {
-            margin: 0;
-            padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--soft-pink);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            overflow: hidden;
-            text-align: center;
+        body, html {
+            margin: 0; padding: 0;
+            font-family: 'Segoe UI', Roboto, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            overflow-x: hidden;
         }
 
-        .container {
-            background: white;
-            padding: 2.5rem;
-            border-radius: 25px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
-            max-width: 450px;
-            width: 90%;
-            transition: all 0.5s ease;
+        /* --- Lock Screen --- */
+        #lock-screen {
+            position: fixed; inset: 0;
+            background: radial-gradient(circle, #1a202c 0%, #000 100%);
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            z-index: 1000;
         }
 
-        h1 { color: var(--deep-red); margin-bottom: 1.5rem; font-size: 1.8rem; }
-        p { color: #555; line-height: 1.6; }
-
-        .btn-group {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
+        .login-card {
+            background: var(--card); padding: 2rem; border-radius: 15px;
+            border: 1px solid var(--primary); text-align: center; width: 80%; max-width: 320px;
         }
 
-        button {
-            padding: 15px;
-            border: none;
-            border-radius: 50px;
-            background-color: var(--primary-pink);
-            color: white;
-            font-size: 1.1rem;
-            font-weight: bold;
-            cursor: pointer;
-            transition: transform 0.2s, background-color 0.2s;
+        /* --- Main UI --- */
+        #main-site { display: none; padding: 15px; box-sizing: border-box; max-width: 500px; margin: auto; }
+
+        .header {
+            display: flex; justify-content: space-between; align-items: center;
+            border-bottom: 2px solid #333; padding-bottom: 10px; margin-bottom: 15px;
         }
 
-        button:hover {
-            background-color: var(--deep-red);
-            transform: scale(1.05);
+        /* Telegram Button */
+        .tg-btn {
+            background: var(--tg); color: white; text-decoration: none;
+            display: flex; align-items: center; justify-content: center;
+            padding: 12px; border-radius: 8px; font-weight: bold;
+            margin-bottom: 15px; font-size: 14px; text-transform: uppercase;
+            box-shadow: 0 4px 10px rgba(0, 136, 204, 0.3);
         }
 
-        .hidden { display: none; }
-
-        .celebration-bg {
-            background-color: #ffb3c1 !important;
+        .card {
+            background: var(--card); border-radius: 12px;
+            padding: 15px; border: 1px solid #2d3436; margin-bottom: 15px;
         }
 
-        .letter-content {
-            text-align: left;
-            white-space: pre-line;
-            font-style: italic;
-            color: #333;
-            margin-top: 20px;
-            font-size: 1.1rem;
+        .protocol-header {
+            color: var(--warning); font-weight: bold; font-size: 14px;
+            display: flex; align-items: center; gap: 5px; margin-bottom: 10px;
         }
 
-        .heart { color: var(--deep-red); font-size: 2.5rem; margin-bottom: 10px; }
+        .rules-container {
+            display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px;
+        }
+
+        .rule-box {
+            background: rgba(255, 74, 74, 0.1); border: 1px solid #ff4a4a44;
+            color: #ff9f9f; padding: 8px; border-radius: 6px; font-size: 11px;
+            text-align: center; font-weight: 600;
+        }
+
+        .mtg-box {
+            grid-column: span 2; background: rgba(0, 255, 136, 0.1);
+            border: 1px solid var(--primary); color: var(--primary);
+            font-size: 14px; padding: 10px; font-weight: 800; text-align: center;
+        }
+
+        select {
+            width: 100%; padding: 14px; margin: 10px 0;
+            background: #000; color: var(--primary); border: 1px solid #444;
+            border-radius: 8px; font-size: 16px; font-weight: bold;
+        }
+
+        .gen-area {
+            min-height: 300px; display: flex; flex-direction: column;
+            align-items: center; justify-content: center; text-align: center;
+        }
+
+        .btn-gen {
+            background: var(--primary); color: #000; font-weight: 900;
+            padding: 18px; border: none; border-radius: 10px;
+            cursor: pointer; width: 100%; font-size: 18px;
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.3);
+            text-transform: uppercase;
+        }
+
+        .signal-box { display: none; width: 100%; animation: zoomIn 0.3s ease; }
+        @keyframes zoomIn { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+        .dir-text { font-size: 3.5rem; font-weight: 900; margin: 10px 0; line-height: 1; }
+        .glow-green { color: var(--primary); text-shadow: 0 0 15px var(--primary); }
+        .glow-red { color: var(--danger); text-shadow: 0 0 15px var(--danger); }
+
+        .log-text { font-family: monospace; font-size: 12px; color: #00d4ff; text-align: left; width: 100%; }
+
+        .branding-text {
+            margin-top: 20px; font-size: 12px; color: #aaa; line-height: 1.8;
+            border-top: 1px solid #333; padding-top: 15px;
+        }
+        .owner-link { color: var(--primary); text-decoration: none; font-weight: bold; }
     </style>
 </head>
 <body>
 
-    <div id="screen-question" class="container">
-        <div class="heart">❤️</div>
-        <h1>নাজিফা, তুমি কি আমাকে ভালোবাসো?</h1>
-        <div class="btn-group">
-            <button onclick="showLove()">হ্যাঁ ❤️</button>
-            <button onclick="showLove()">হ্যাঁ ❤️</button>
-            <button onclick="showLetter()">অবশ্যই হ্যাঁ! ❤️</button>
+    <div id="lock-screen">
+        <div class="login-card">
+            <h2 class="glow-green" style="margin:0;">TZ ALPHA</h2>
+            <p style="font-size: 12px; color: #888;">SECURE LOGIN SYSTEM</p>
+            <input type="password" id="passInput" style="width:100%; padding:12px; margin: 15px 0; background:#000; border:1px solid #444; color:white; text-align:center; box-sizing:border-box;" placeholder="Enter Password">
+            <button class="btn-gen" onclick="login()">UNFOLD ACCESS</button>
+            <p id="err" style="color:var(--danger); font-size:12px; margin-top:10px;"></p>
         </div>
     </div>
 
-    <div id="screen-love" class="container hidden">
-        <div class="heart">💖✨</div>
-        <h1 style="font-size: 2rem;">অনেক ভালোবাসি তোমাকে জান! ❤️‍🩹</h1>
-        <button onclick="goBack()" style="margin-top: 20px; font-size: 0.8rem; background: #aaa;">পিছনে যাও</button>
+    <div id="main-site">
+        <a href="https://t.me/YourChannelLink" target="_blank" class="tg-btn">
+            ✈️ JOIN OUR TELEGRAM CHANNEL
+        </a>
+
+        <div class="header">
+            <div>
+                <span class="glow-green" style="font-weight:900; font-size:1.1rem;">TZteamALPHA</span><br>
+                <span style="font-size:10px; color:#555;">AI GENERATOR V5.0</span>
+            </div>
+            <div id="clock" style="font-weight:bold; color:#888;">00:00:00</div>
+        </div>
+
+        <div class="card" style="border-color: #ffcc0044;">
+            <div class="protocol-header">⚠️ TRADING PROTOCOLS</div>
+            <div class="rules-container">
+                <div class="rule-box">AVOID DOJI</div>
+                <div class="rule-box">AVOID HAMMER</div>
+                <div class="rule-box">NO GAP UP</div>
+                <div class="rule-box">NO GAP DOWN</div>
+                <div class="rule-box mtg-box">🔥 USE 1 STEP MTG MUST 🔥</div>
+            </div>
+        </div>
+
+        <div class="card">
+            <label style="font-size:11px; color:#888; font-weight:bold;">ASSET SELECTION</label>
+            <select id="asset">
+                <optgroup label="🌐 REAL MARKET">
+                    <option>EUR/USD</option>
+                    <option>GBP/USD</option>
+                    <option>USD/JPY</option>
+                    <option>EUR/JPY</option>
+                    <option>GBP/JPY</option>
+                    <option>AUD/USD</option>
+                </optgroup>
+                <optgroup label="🔥 QUOTEX OTC (18+)">
+                    <option>EUR/USD (OTC)</option>
+                    <option>GBP/USD (OTC)</option>
+                    <option>USD/JPY (OTC)</option>
+                    <option>AUD/CAD (OTC)</option>
+                    <option>USD/INR (OTC)</option>
+                    <option>EUR/GBP (OTC)</option>
+                    <option>USD/CHF (OTC)</option>
+                    <option>AUD/USD (OTC)</option>
+                    <option>GBP/JPY (OTC)</option>
+                    <option>EUR/JPY (OTC)</option>
+                    <option>USD/BRL (OTC)</option>
+                    <option>EUR/CHF (OTC)</option>
+                    <option>NZD/USD (OTC)</option>
+                    <option>USD/TRY (OTC)</option>
+                    <option>USD/IDR (OTC)</option>
+                    <option>USD/PKR (OTC)</option>
+                    <option>USD/EGP (OTC)</option>
+                    <option>USD/BDT (OTC)</option>
+                    <option>USD/MYR (OTC)</option>
+                </optgroup>
+            </select>
+        </div>
+
+        <div class="card gen-area">
+            <div id="logs" class="log-text"></div>
+            <div id="idle" style="width:100%;">
+                <button class="btn-gen" onclick="startGen()">Generate Signal</button>
+            </div>
+            <div id="signalUI" class="signal-box">
+                <h3 id="targetPair" style="margin:0; color:#aaa; font-size:14px;">---</h3>
+                <div id="direction" class="dir-text">---</div>
+                <div style="font-size:1.5rem; font-weight:bold;">TIME: <span id="time" class="glow-green">00:00</span></div>
+                
+                <div class="branding-text">
+                    𝐏𝐎𝐖𝐄𝐑𝐄𝐃 𝐁𝐘 - [𝐓𝐙] 𝐓𝐄𝐀𝐌<br>
+                    Contact Owner: <a href="https://t.me/TZteam_Owner" target="_blank" class="owner-link">@TZteam_Owner</a>
+                </div>
+
+                <button onclick="resetUI()" style="background:none; border:1px solid #444; color:#666; padding:8px 20px; border-radius:5px; margin-top:15px;">BACK</button>
+            </div>
+        </div>
     </div>
 
-    <div id="screen-letter" class="container hidden">
-        <h1 style="border-bottom: 2px solid var(--primary-pink); padding-bottom: 10px;">প্রিয় নাজিফা...</h1>
-        <div class="letter-content">
-            আজ তোমাকে কিছু কথা বলতে চাই যা হয়তো মুখে সবসময় বলা হয় না। নাজিফা, তুমি আমার জীবনের সেই মানুষ, যাকে পাওয়ার পর আমার পৃথিবীটা বদলে গেছে। তোমার হাসি, তোমার কথা আর তোমার ভালোবাসা আমার প্রতিদিনের বেঁচে থাকার শক্তি।
+    <script>
+        function login() {
+            if(document.getElementById('passInput').value === "TZteamALPHA") {
+                document.getElementById('lock-screen').style.display = 'none';
+                document.getElementById('main-site').style.display = 'block';
+                setInterval(() => { document.getElementById('clock').innerText = new Date().toLocaleTimeString(); }, 1000);
+            } else {
+                document.getElementById('err').innerText = "Wrong Password!";
+            }
+        }
 
-            আমি তোমাকে কতটা ভালোবাসি তা হয়তো এই সামান্য কয়েকটা লাইনে বোঝানো সম্ভব না। শুধু এটুকু জেনে রেখো, আমার প্রতিটি ভাবনায় আর প্রতিটি প্রার্থনায় তুমি আছো। তুমি শুধু আমার ভালোবাসাই নও, তুমি আমার সবটুকু সুখ।
+        const steps = ["Scanning Market...", "Analysing Candlestick...", "Filtering Doji/Hammer...", "Checking Gaps...", "Calculating MTG...", "READY!"];
 
-            আমার পাশে থাকার জন্য আর আমাকে এতোটা ভালোবাসার জন্য তোমাকে অনেক ধন্যবাদ। আমি কথা দিচ্ছি, সারাজীবন তোমার হাতটা এভাবেই শক্ত করে ধরে রাখব।
+        function startGen() {
+            const logBox = document.getElementById('logs');
+            document.getElementById('idle').style.display = 'none';
+            logBox.innerHTML = "";
+            let i = 0;
+            const timer = setInterval(() => {
+                const d = document.createElement('div');
+                d.innerText = ">> " + steps[i];
+                logBox.appendChild(d);
+                i++;
+                if(i >= steps.length) {
+                    clearInterval(timer);
+                    setTimeout(showResult, 400);
+                }
+            }, 300);
+        }
 
-            তোমাকে অনেক অনেক ভালোবাসি, নাজিফা! ❤️
+        function showResult() {
+            const pair = document.getElementById('asset').value;
+            const now = new Date();
+            now.setMinutes(now.getMinutes() + 1);
+            const t = now.getHours().toString().padStart(2,'0') + ":" + now.getMinutes().toString().padStart(2,'0');
+            const up = Math.random() > 0.5;
+            document.getElementById('logs').innerHTML = "";
+            document.getElementById('targetPair').innerText = pair;
+            document.getElementById('direction').innerText = up ? "CALL ⬆️" : "PUT ⬇️";
+            document.getElementById('direction').className = "dir-text " + (up ? "glow-green" : "glow-red");
+            document.getElementById('time').innerText = t;
+            document.getElementById('signalUI').style.display = 'block';
+        }
 
-            ইতি,
-            তোমার <b>খালিদ</b>
-        </div>
+        function resetUI() {
+            document.getElementById('signalUI').style.display = 'none';
+            document.getElementById('idle').style.display = 'block';
+            document.getElementById('logs').innerHTML = "";
+        }
+    </script>
+</body>
+</html>
         <button onclick="goBack()" style="margin-top: 25px; font-size: 0.9rem; background: #555;">পিছনে ফিরুন</button>
     </div>
 
